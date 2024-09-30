@@ -311,10 +311,6 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
 	lastX = xpos;
 	lastY = ypos;
 
-	float sensitivity = 0.05f;
-	xoffset *= sensitivity;
-	yoffset *= sensitivity;
-
 	camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
