@@ -300,7 +300,7 @@ void processInput(GLFWwindow *window)
 		glfwSetWindowShouldClose(window, true);
 }
 
-//鼠标回调函数
+//鼠标移动回调函数
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
 	if (firstMouse) // 这个bool变量初始时是设定为true的
 	{
