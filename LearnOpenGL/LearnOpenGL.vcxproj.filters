@@ -38,12 +38,18 @@
     <ClInclude Include="stb_image.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.fs">
       <Filter>资源文件\shader</Filter>
     </None>
     <None Include="shader.vs">
+      <Filter>资源文件\shader</Filter>
+    </None>
+    <None Include="light.fs">
       <Filter>资源文件\shader</Filter>
     </None>
   </ItemGroup>

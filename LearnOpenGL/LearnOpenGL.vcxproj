@@ -122,10 +122,12 @@
     <ClCompile Include="源.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="camera.h" />
     <ClInclude Include="shader_s.h" />
     <ClInclude Include="stb_image.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="light.fs" />
     <None Include="shader.fs" />
     <None Include="shader.vs" />
   </ItemGroup>
