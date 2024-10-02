@@ -1,10 +1,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "shader_s.h"
-#include "camera.h"
+#include "src/shader_s.h"
+#include "src/camera.h"
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+#include "src/stb_image.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -22,20 +22,20 @@ const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 float fov = 45.0f;
 
-//Ïà»ú²ÎÊı
+//ç›¸æœºå‚æ•°
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-//Êó±ê²ÎÊı
+//é¼ æ ‡å‚æ•°
 float lastX = SCR_WIDTH/2, lastY = SCR_HEIGHT/2;
 bool firstMouse = true;
-//Ã¿Ö¡Ê±¼ä
-float deltaTime = 0.0f; // µ±Ç°Ö¡ÓëÉÏÒ»Ö¡µÄÊ±¼ä²î
-float lastFrame = 0.0f; // ÉÏÒ»Ö¡µÄÊ±¼ä
-//µÆ¹â
+//æ¯å¸§æ—¶é—´
+float deltaTime = 0.0f; // å½“å‰å¸§ä¸ä¸Šä¸€å¸§çš„æ—¶é—´å·®
+float lastFrame = 0.0f; // ä¸Šä¸€å¸§çš„æ—¶é—´
+//ç¯å…‰
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
 
 int main()
 {
-	//¡¾´°¿ÚÉèÖÃ¡¿
+	//ã€çª—å£è®¾ç½®ã€‘
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -49,7 +49,7 @@ int main()
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
-	//»Øµ÷º¯Êı
+	//å›è°ƒå‡½æ•°
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
@@ -60,19 +60,19 @@ int main()
 		return -1;
 	}
 
-	//Òş²ØÊó±ê
+	//éšè—é¼ æ ‡
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-	//ÆôÓÃÉî¶È»º³å
+	//å¯ç”¨æ·±åº¦ç¼“å†²
 	glEnable(GL_DEPTH_TEST);
 
-	//¡¾×ÅÉ«Æ÷¡¿
-	Shader ourShader("shader.vs", "shader.fs");
-	Shader lightCubeShader("shader.vs", "light.fs");
+	//ã€ç€è‰²å™¨ã€‘
+	Shader ourShader("shader/shader.vs", "shader/shader.fs");
+	Shader lightCubeShader("shader/shader.vs", "shader/light.fs");
 
-	//¡¾¶¥µãÊäÈë¡¿
+	//ã€é¡¶ç‚¹è¾“å…¥ã€‘
 	float vertices[] = {
-		//     ---- Î»ÖÃ ----  - ÎÆÀí×ø±ê -
+		//     ---- ä½ç½® ----  - çº¹ç†åæ ‡ -
 		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
 		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
 		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -116,11 +116,11 @@ int main()
 		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 	};
 	//unsigned int indices[] = {
-	//	0, 1, 3, // µÚÒ»¸öÈı½ÇĞÎ
-	//	1, 2, 3  // µÚ¶ş¸öÈı½ÇĞÎ
+	//	0, 1, 3, // ç¬¬ä¸€ä¸ªä¸‰è§’å½¢
+	//	1, 2, 3  // ç¬¬äºŒä¸ªä¸‰è§’å½¢
 	//};
 
-	// ¶¥µã»º³å¶ÔÏóVBO£¬°ó¶¨¶¥µãÊı×é¶ÔÏóVAO
+	// é¡¶ç‚¹ç¼“å†²å¯¹è±¡VBOï¼Œç»‘å®šé¡¶ç‚¹æ•°ç»„å¯¹è±¡VAO
 	unsigned int VBO, VAO, EBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -128,20 +128,20 @@ int main()
 
 	glBindVertexArray(VAO);
 
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);	//½«»º³å°ó¶¨
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);	//¼ÓÔØ¶¥µãÊı¾İÖÁ»º´æ
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);	//å°†ç¼“å†²ç»‘å®š
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);	//åŠ è½½é¡¶ç‚¹æ•°æ®è‡³ç¼“å­˜
 
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	//Á´½Ó¶¥µãÊôĞÔ
-	//×ø±ê
+	//é“¾æ¥é¡¶ç‚¹å±æ€§
+	//åæ ‡
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
-	//ÑÕÉ«
+	//é¢œè‰²
 	//glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	//glEnableVertexAttribArray(1);
-	//ÌùÍ¼
+	//è´´å›¾
 	//glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	//glEnableVertexAttribArray(1);
 
@@ -155,19 +155,19 @@ int main()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	////¡¾ÎÆÀí¡¿
+	////ã€çº¹ç†ã€‘
 	//unsigned int texture1, texture2;
 	////1
 	//glGenTextures(1, &texture1);
 	//glBindTexture(GL_TEXTURE_2D, texture1);
-	//// Îªµ±Ç°°ó¶¨µÄÎÆÀí¶ÔÏóÉèÖÃ»·ÈÆ¡¢¹ıÂË·½Ê½
+	//// ä¸ºå½“å‰ç»‘å®šçš„çº¹ç†å¯¹è±¡è®¾ç½®ç¯ç»•ã€è¿‡æ»¤æ–¹å¼
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//// ¼ÓÔØ²¢Éú³ÉÎÆÀí
+	//// åŠ è½½å¹¶ç”Ÿæˆçº¹ç†
 	//int width, height, nrChannels;
-	//stbi_set_flip_vertically_on_load(true);	//·­×ªyÖá
+	//stbi_set_flip_vertically_on_load(true);	//ç¿»è½¬yè½´
 	//unsigned char* data = stbi_load("./picture/container.jpg", &width, &height, &nrChannels, 0);
 	//if (data)
 	//{
@@ -178,20 +178,20 @@ int main()
 	//{
 	//	std::cout << "Failed to load texture" << std::endl;
 	//}
-	//stbi_image_free(data);	//ÊÍ·ÅÎÆÀíÍ¼ÏñÄÚ´æ
+	//stbi_image_free(data);	//é‡Šæ”¾çº¹ç†å›¾åƒå†…å­˜
 	////2
 	//glGenTextures(1, &texture2);
 	//glBindTexture(GL_TEXTURE_2D, texture2);
-	//// Îªµ±Ç°°ó¶¨µÄÎÆÀí¶ÔÏóÉèÖÃ»·ÈÆ¡¢¹ıÂË·½Ê½
+	//// ä¸ºå½“å‰ç»‘å®šçš„çº¹ç†å¯¹è±¡è®¾ç½®ç¯ç»•ã€è¿‡æ»¤æ–¹å¼
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//// ¼ÓÔØ²¢Éú³ÉÎÆÀí
+	//// åŠ è½½å¹¶ç”Ÿæˆçº¹ç†
 	//data = stbi_load("./picture/awesomeface.png", &width, &height, &nrChannels, 0);
 	//if (data)
 	//{
-	//	// pngÍ¼ÏñÓÃRGBA
+	//	// pngå›¾åƒç”¨RGBA
 	//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 	//	glGenerateMipmap(GL_TEXTURE_2D);
 	//}
@@ -199,36 +199,36 @@ int main()
 	//{
 	//	std::cout << "Failed to load texture" << std::endl;
 	//}
-	//stbi_image_free(data);	//ÊÍ·ÅÎÆÀíÍ¼ÏñÄÚ´æ
+	//stbi_image_free(data);	//é‡Šæ”¾çº¹ç†å›¾åƒå†…å­˜
 
-	////¡¾ÉèÖÃuniform¡¿
+	////ã€è®¾ç½®uniformã€‘
 	////ourShader
-	//ourShader.use(); // ²»ÒªÍü¼ÇÔÚÉèÖÃuniform±äÁ¿Ö®Ç°¼¤»î×ÅÉ«Æ÷³ÌĞò£¡
-	////ÌùÍ¼
-	//glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0); // ÊÖ¶¯ÉèÖÃ
-	//ourShader.setInt("texture2", 1); // »òÕßÊ¹ÓÃ×ÅÉ«Æ÷ÀàÉèÖÃ
+	//ourShader.use(); // ä¸è¦å¿˜è®°åœ¨è®¾ç½®uniformå˜é‡ä¹‹å‰æ¿€æ´»ç€è‰²å™¨ç¨‹åºï¼
+	////è´´å›¾
+	//glUniform1i(glGetUniformLocation(ourShader.ID, "texture1"), 0); // æ‰‹åŠ¨è®¾ç½®
+	//ourShader.setInt("texture2", 1); // æˆ–è€…ä½¿ç”¨ç€è‰²å™¨ç±»è®¾ç½®
 
 	while (!glfwWindowShouldClose(window))
 	{
-		//¼ÆËãÃ¿Ö¡Ê±¼ä²î
+		//è®¡ç®—æ¯å¸§æ—¶é—´å·®
 		float currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		//ÊäÈë²¢´¦Àí
+		//è¾“å…¥å¹¶å¤„ç†
 		processInput(window);
 
-		//äÖÈ¾Ö¸Áî
+		//æ¸²æŸ“æŒ‡ä»¤
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		////ÌùÍ¼
+		////è´´å›¾
 		//glActiveTexture(GL_TEXTURE0);
 		//glBindTexture(GL_TEXTURE_2D, texture1);
 		//glActiveTexture(GL_TEXTURE1);
 		//glBindTexture(GL_TEXTURE_2D, texture2);
 
-		//×ø±ê±ä»»
+		//åæ ‡å˜æ¢
 		glm::mat4 model = glm::mat4(1.0f); // make sure to initialize matrix to identity matrix first
 		glm::mat4 view = glm::mat4(1.0f);
 		glm::mat4 projection = glm::mat4(1.0f);
@@ -238,13 +238,13 @@ int main()
 
 		//lightingShader
 		ourShader.use();
-		//uniform¸³Öµ
+		//uniformèµ‹å€¼
 		ourShader.setVec3("objectColor", 1.0f, 0.5f, 0.31f);
 		ourShader.setVec3("lightColor", 1.0f, 1.0f, 1.0f);
 		glUniformMatrix4fv(glGetUniformLocation(ourShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(model));
 		glUniformMatrix4fv(glGetUniformLocation(ourShader.ID, "view"), 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(glGetUniformLocation(ourShader.ID, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-		//»æÖÆ
+		//ç»˜åˆ¶
 		glBindVertexArray(VAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
@@ -254,22 +254,22 @@ int main()
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, lightPos);
 		model = glm::scale(model, glm::vec3(0.2f));
-		//uniform¸³Öµ
+		//uniformèµ‹å€¼
 		lightCubeShader.setMat4("model", model);
 		lightCubeShader.setMat4("projection", projection);
 		lightCubeShader.setMat4("view", view);
-		//»æÖÆ
+		//ç»˜åˆ¶
 		glBindVertexArray(lightCubeVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
 
 		//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
-		//¼ì²é²¢µ÷ÓÃÊÂ¼ş£¬½»»»»º³å
+		//æ£€æŸ¥å¹¶è°ƒç”¨äº‹ä»¶ï¼Œäº¤æ¢ç¼“å†²
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
 
-	//Çå³ı»º´æ
+	//æ¸…é™¤ç¼“å­˜
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteVertexArrays(1, &lightCubeVAO);
 	glDeleteBuffers(1, &VBO);
@@ -279,18 +279,18 @@ int main()
 	return 0;
 }
 
-//Ëæ´°¿Ú×Ô¶¯µ÷½Ú´óĞ¡
+//éšçª—å£è‡ªåŠ¨è°ƒèŠ‚å¤§å°
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
 	glViewport(0, 0, width, height);
 }
 
-//ÅĞ¶ÏÊäÈë²¢´¦Àí
+//åˆ¤æ–­è¾“å…¥å¹¶å¤„ç†
 void processInput(GLFWwindow *window)
 {
-	float cameraSpeed = 2.5f * deltaTime;//¸ù¾İÃ¿Ö¡ËùÓÃÊ±¼ä¼ÆËãºÏÊÊµÄÒÆ¶¯ËÙ¶È
+	float cameraSpeed = 2.5f * deltaTime;//æ ¹æ®æ¯å¸§æ‰€ç”¨æ—¶é—´è®¡ç®—åˆé€‚çš„ç§»åŠ¨é€Ÿåº¦
 
-	//WASDÒÆ¶¯ÊÓ½Ç
+	//WASDç§»åŠ¨è§†è§’
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
@@ -300,17 +300,17 @@ void processInput(GLFWwindow *window)
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
 		camera.ProcessKeyboard(RIGHT, deltaTime);
 
-	//ESCÍË³ö
+	//ESCé€€å‡º
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 }
 
-//Êó±êÒÆ¶¯»Øµ÷º¯Êı
+//é¼ æ ‡ç§»åŠ¨å›è°ƒå‡½æ•°
 void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
 	float xpos = static_cast<float>(xposIn);
 	float ypos = static_cast<float>(yposIn);
 
-	if (firstMouse) // Õâ¸öbool±äÁ¿³õÊ¼Ê±ÊÇÉè¶¨ÎªtrueµÄ
+	if (firstMouse) // è¿™ä¸ªboolå˜é‡åˆå§‹æ—¶æ˜¯è®¾å®šä¸ºtrueçš„
 	{
 		lastX = xpos;
 		lastY = ypos;
@@ -318,14 +318,14 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn) {
 	}
 
 	float xoffset = xpos - lastX;
-	float yoffset = lastY - ypos; // ×¢ÒâÕâÀïÊÇÏà·´µÄ£¬ÒòÎªy×ø±êÊÇ´Óµ×²¿Íù¶¥²¿ÒÀ´ÎÔö´óµÄ
+	float yoffset = lastY - ypos; // æ³¨æ„è¿™é‡Œæ˜¯ç›¸åçš„ï¼Œå› ä¸ºyåæ ‡æ˜¯ä»åº•éƒ¨å¾€é¡¶éƒ¨ä¾æ¬¡å¢å¤§çš„
 	lastX = xpos;
 	lastY = ypos;
 
 	camera.ProcessMouseMovement(xoffset, yoffset);
 }
 
-//Êó±ê¹öÂÖ»Øµ÷º¯Êı
+//é¼ æ ‡æ»šè½®å›è°ƒå‡½æ•°
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(static_cast<float>(yoffset));
