@@ -216,6 +216,20 @@ int main()
 	ourShader.setInt("material.diffuse", 0);
 	ourShader.setInt("material.specular", 1);
 
+	//立方体设置
+	glm::vec3 cubePositions[] = {
+		glm::vec3(0.0f,  0.0f,  0.0f),
+		glm::vec3(2.0f,  5.0f, -15.0f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.0f, -12.3f),
+		glm::vec3(2.4f, -0.4f, -3.5f),
+		glm::vec3(-1.7f,  3.0f, -7.5f),
+		glm::vec3(1.3f, -2.0f, -2.5f),
+		glm::vec3(1.5f,  2.0f, -2.5f),
+		glm::vec3(1.5f,  0.2f, -1.5f),
+		glm::vec3(-1.3f,  1.0f, -1.5f)
+	};
+
 	while (!glfwWindowShouldClose(window))
 	{
 		//计算每帧时间差
@@ -243,7 +257,7 @@ int main()
 		//model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 		view = camera.GetViewMatrix();
 		projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		glm::mat3 normalMatrix = glm::mat3(transpose(inverse(model)));
+		// glm::mat3 normalMatrix = glm::mat3(transpose(inverse(model)));
 
 		//lightingShader
 		ourShader.use();
@@ -252,25 +266,33 @@ int main()
 		ourShader.setVec3("viewPos", camera.Position);
 		ourShader.setFloat("material.shininess", 64.0f);
 
-		// // 光照随时间变化
-		// glm::vec3 lightColor;
-		// lightColor.x = sin(glfwGetTime() * 2.0f);
-		// lightColor.y = sin(glfwGetTime() * 0.7f);
-		// lightColor.z = sin(glfwGetTime() * 1.3f);
-		// glm::vec3 diffuseColor = lightColor   * glm::vec3(0.5f); // 降低影响
-		// glm::vec3 ambientColor = diffuseColor * glm::vec3(0.2f); // 很低的影响
 		ourShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
 		ourShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
 		ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f); 
-		ourShader.setVec3("light.position", lightPos); 
+		// ourShader.setVec3("light.position", lightPos);
+		ourShader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
 
-		ourShader.setMat3("normalMatrix", normalMatrix);
-		ourShader.setMat4("model", model);
+		// ourShader.setMat3("normalMatrix", normalMatrix);
+		// ourShader.setMat4("model", model);
 		ourShader.setMat4("projection", projection);
 		ourShader.setMat4("view", view);
 		//绘制
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		// glDrawArrays(GL_TRIANGLES, 0, 36);
+		// 10个箱子
+		float time_angle = (float)glfwGetTime();
+		for(unsigned int i = 0; i < 10; i++)
+		{
+			glm::mat4 model(1.0f);
+			model = glm::translate(model, cubePositions[i]);
+			float angle = 60.0f * (i+time_angle);
+			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+			ourShader.setMat4("model", model);
+			glm::mat3 normalMatrix = glm::mat3(transpose(inverse(model)));
+			ourShader.setMat3("normalMatrix", normalMatrix);
+
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 
 		//lightCubeShader
 		lightCubeShader.use();
