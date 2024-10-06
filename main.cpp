@@ -269,8 +269,11 @@ int main()
 		ourShader.setVec3("light.ambient", 0.2f, 0.2f, 0.2f);
 		ourShader.setVec3("light.diffuse", 0.5f, 0.5f, 0.5f);
 		ourShader.setVec3("light.specular", 1.0f, 1.0f, 1.0f); 
-		// ourShader.setVec3("light.position", lightPos);
-		ourShader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
+		ourShader.setVec3("light.position", lightPos);
+		// ourShader.setVec3("light.direction", -0.2f, -1.0f, -0.3f);
+		ourShader.setFloat("light.constant",  1.0f);
+		ourShader.setFloat("light.linear",    0.045f);
+		ourShader.setFloat("light.quadratic", 0.0075f);
 
 		// ourShader.setMat3("normalMatrix", normalMatrix);
 		// ourShader.setMat4("model", model);
@@ -285,7 +288,7 @@ int main()
 		{
 			glm::mat4 model(1.0f);
 			model = glm::translate(model, cubePositions[i]);
-			float angle = 60.0f * (i+time_angle);
+			float angle = 40.0f * (i+time_angle);
 			model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 			ourShader.setMat4("model", model);
 			glm::mat3 normalMatrix = glm::mat3(transpose(inverse(model)));
